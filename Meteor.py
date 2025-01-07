@@ -29,16 +29,16 @@ class Explosion(pygame.sprite.Sprite):
             self.kill()
 
 class Asteroid(pygame.sprite.Sprite):
-    def __init__(self,game,size=2,posiion=None):
+    def __init__(self,game,size=2,position=None):
         super().__init__()
         self.game = game
         self.size = size
-        if posiion is None:
+        if position is None:
             self.x = random.randint(5,900)
             self.y = random.randint(5,600)
         else:
-            self.x=posiion[0]
-            self.y=posiion[1]
+            self.x=position[0]
+            self.y=position[1]
         self.direction = random.randint(0,360)
         self.thrust =  1
         self.image = pygame.image.load(f"assets//asteroid{self.size}.png")        

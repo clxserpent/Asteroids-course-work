@@ -50,7 +50,7 @@ missing module named jaraco.text.yield_lines - imported by setuptools._vendor.ja
 missing module named _manylinux - imported by packaging._manylinux (delayed, optional), setuptools._vendor.packaging._manylinux (delayed, optional), setuptools._vendor.wheel.vendored.packaging._manylinux (delayed, optional)
 missing module named trove_classifiers - imported by setuptools.config._validate_pyproject.formats (optional)
 missing module named _suggestions - imported by traceback (delayed, optional)
-missing module named OpenGL - imported by pygame (delayed)
+missing module named OpenGL - imported by pygame (delaasayed)
 missing module named numpy - imported by pygame.surfarray (top-level), pygame.sndarray (top-level), pygame (delayed)
 missing module named pygame.register_quit - imported by pygame (top-level), pygame.fastevent (top-level)
 missing module named pygame.error - imported by pygame (top-level), pygame.fastevent (top-level)

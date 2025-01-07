@@ -15,11 +15,13 @@ class Game:
         self.player_1 = Ship(self, False)
         self.player_2 = Ship(self,True)
         self.asteroid = Asteroid(self)
-
+        self.poweruplists = pygame.sprite.Group()
         self.all_sprites = pygame.sprite.Group()
         self.asteroid_sprites = pygame.sprite.Group()
-
-        if player2:
+        self.powerup_spawned = False
+        self.P1PowerUpLastScore = 0 
+        self.P2PowerUpLastScore = 0
+        if player2: 
             self.all_sprites.add(self.player_2,self.player_1)
         else:
             self.all_sprites.add(self.player_1)
@@ -40,7 +42,7 @@ class Game:
         self.display_restart = self.textfont.render("Press C to restart", 1, (255, 255, 255))
         self.asteroid_reload = 500
         self.asteroid_block = self.asteroid_reload
-      
+
         self.gameover = False
     
     def GameoverMenu(self,player2):
@@ -57,8 +59,10 @@ class Game:
                 sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_q:
+                    self.gameover = False
                     pygame.quit()
                     sys.exit
+
                 elif event.key == pygame.K_c:
                     self.playing = False  
                     player1_scores.player1_score = 0 
@@ -69,8 +73,10 @@ class Game:
                     self.gameover = False
             if self.gameover == False:
                 break
-            pygame.display.update()
-
+            try:
+                 pygame.display.update()
+            except pygame.error:
+                pass
 
     def pause_menu(self,player2):
         self.paused = True
@@ -113,9 +119,11 @@ class Game:
     def run(self, player2):
         # Main game loop
         from settings import settings
-    
+        self.playing = True 
+
         while self.playing:
-      
+            player1_scores.highscore = player2_scores.highscore
+            player2_scores.highscore = player1_scores.highscore
             if self.asteroid_block:
                 self.asteroid_block -= 1 
             else:
@@ -123,10 +131,27 @@ class Game:
                 Aster.spawn()
                 self.asteroid_block = self.asteroid_reload
                 pygame.display.update()
+
+            if not player2:
+                if player1_scores.player1_score >= self.P1PowerUpLastScore + 10 and player1_scores.player1_score >= 10  and player1_scores.player1_score != self.P1PowerUpLastScore:
+                    Power = powerup_manager(self,"Rapidfire")
+                    Power.spawn()
+                    self.P1PowerUpLastScore = player1_scores.player1_score
+            if player2:
+                if player1_scores.player1_score >= self.P1PowerUpLastScore + 10 and player1_scores.player1_score >= 10  and player1_scores.player1_score != self.P1PowerUpLastScore:
+                    Power = powerup_manager(self,"Rapidfire")
+                    Power.spawn()
+                    self.P1PowerUpLastScore = player1_scores.player1_score
+                if player2_scores.player2_score >= self.P2PowerUpLastScore + 10 and player2_scores.player2_score >= 10  and player2_scores.player2_score != self.P2PowerUpLastScore:
+                    Power = powerup_manager(self,"Rapidfire")
+                    Power.spawn()
+                    self.P2PowerUpLastScore = player2_scores.player2_score
             for event in pygame.event.get():  # Only handle Quit events
                 if event.type == pygame.QUIT:
+                    self.playing = False
                     pygame.quit()
                     sys.exit()
+                    break
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_t:
                         try:
@@ -139,8 +164,12 @@ class Game:
             self.display.blit(self.background, (0, 0))
             self.clock.tick(120)  # Cap the FPS at 60
             self.all_sprites.update()
+            self.poweruplists.update()
+ 
+
             try:
                 self.all_sprites.draw(self.display)
+                self.poweruplists.draw(self.display)
             except:
                 pass
             if not player2:
@@ -150,19 +179,20 @@ class Game:
                     break
             self.score_text = self.textfont.render(f"p1 score:{player1_scores.player1_score}", 1, (255, 255, 255))
             self.display.blit(self.score_text,(15,10))
-            self.highscoreText = self.textfont.render(f"highscore:{player2_scores.highscore}" , 1 ,(255,255,255))
+            self.highscoreText = self.textfont.render(f"highscore:{player1_scores.highscore}" , 1 ,(255,255,255))
             self.player1_lives_display = self.textfont.render(f"player1 lives: {self.player_1.player_lives}", 1, (255, 255, 255))
             self.display.blit (self.player1_lives_display, (15,550))
                 
+            player1_scores.highscore = player2_scores.highscore
 
             if player2:
                 self.P2ScoreText = self.textfont.render(f"p2 score: {player2_scores.player2_score}",1, (255,255,255))
                 self.display.blit(self.P2ScoreText,(300,10))
                 player2_scores.updatefile()
-                self.highscoreText = self.textfont.render(f"highscore:{player2_scores.highscore}" , 1 ,(255,255,255))
+                self.highscoreText = self.textfont.render(f"highscore:{player1_scores.highscore}" , 1 ,(255,255,255))
                 self.player2_live_display = self.textfont.render(f"player2 lives: {self.player_2.player_lives}", 1, (255, 255, 255))
                 self.display.blit(self.player2_live_display,(300,550))
-            self.display.blit(self.highscoreText,(700,10))
+            self.display.blit(self.highscoreText,(500,10))
             
             if self.player_1.player_lives ==0 and self.player_2.player_lives == 0:
                 self.gameover = True
@@ -174,7 +204,10 @@ class Game:
             self.gameover_sound.play()
         while self.gameover:
             self.GameoverMenu(player2)
-            pygame.display.update()
+            try:
+                pygame.display.update()
+            except pygame.error:
+                pass
 
 
     def get_screen_height(self):

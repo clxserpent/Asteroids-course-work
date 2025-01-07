@@ -35,10 +35,11 @@ class scoreboard():
                 file.close()
     def CheckScorep2(self):
             if self.player1_score > self.player2_score:
-                self.highscore = self.player1_score
-                file =  open ("scores.txt", "w") 
-                file.write(str(self.highscore))
-                file.close()
+                if self.player1_score> self.highscore:
+                    self.highscore = self.player1_score
+                    file =  open ("scores.txt", "w") 
+                    file.write(str(self.highscore))
+                    file.close()
                 
             else:
                 if self.player2_score > self.highscore:

@@ -2,6 +2,7 @@ import pygame.sprite
 from Meteor import *
 from game import *
 from ship import *
+from powerups import powerup
 
 
 class Asteroid_Manager:
@@ -22,5 +23,16 @@ class Asteroid_Manager:
 
     def get_screen_width(self):
         return self.game.width
+class powerup_manager:
+    def __init__(self,game,POWERUP):
+        self.game = game
+        self.powerup = POWERUP
+        self.x = random.randint(0,900)
+        self.y = 0
+        self.spawned_powerup = powerup(self.powerup,self.x,self.y)
+    def spawn(self):
+        self.game.poweruplists.add(self.spawned_powerup)
+
+
 
 

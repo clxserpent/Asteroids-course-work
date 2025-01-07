@@ -64,6 +64,8 @@ class Mainmenu():
         settings_menu.run(self)
 
     def play(self):
+        player2_scores.player2_score = 0
+        player1_scores.player1_score = 0
         self.startup_sound = pygame.mixer.Sound("assets//startup.wav")
         self.startup_sound.play()
         self.soundtrack.stop()
@@ -101,40 +103,45 @@ class Mainmenu():
     
     def run(self):
         # main game loop
-        
-        self.game = Game(self.display,self.height,self.width,self.player_2_game)
         self.playing = True  # This makes it so that the game runs automatically on start
-        if self.playing == True:
-            self.soundtrack = pygame.mixer.Sound("Soundtrack.mp3")
-            self.soundtrack.play()
-        
-        while self.playing:
-          
-            self.game.paused = False
-            pygame.joystick.init()
-            self.joysticks = [pygame.joystick.Joystick(x) for x in range  (pygame.joystick.get_count())]
 
-            for event in pygame.event.get(pygame.QUIT):  # Only handle Quit events
-                self.quit()
-            for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_p:
-                        self.game.paused = False
-                    if event.key == pygame.K_ESCAPE:
-                        self.quit()
-                        sys.exit()
-                    if event.key == pygame.K_1:
-                        self.player_1()
-                    if event.key == pygame.K_2:
-                        self.player_2()
+        try:    
+            self.game = Game(self.display,self.height,self.width,self.player_2_game)
+            self.playing = True  # This makes it so that the game runs automatically on start
+            if self.playing == True:
+                self.soundtrack = pygame.mixer.Sound("Soundtrack.mp3")
+                self.soundtrack.play()
+            
+            while self.playing:
+            
+                self.game.paused = False
+                pygame.joystick.init()
+                self.joysticks = [pygame.joystick.Joystick(x) for x in range  (pygame.joystick.get_count())]
 
-                if event.type == pygame.JOYBUTTONDOWN:
-                    print(event)
-            mouse_pos = pygame.mouse.get_pos()
-            for button in self.buttons:
-                if button.rect.collidepoint(mouse_pos):
-                    button.update(pygame.mouse.get_pressed()[0])
-            self.display.blit(self.background,(0,0))
-            self.all_sprites.draw(self.display)
-            self.display.blit(self.logo_image, (295,130))
-            pygame.display.flip()  # Using flip() instead of update() for full display update
+                for event in pygame.event.get(pygame.QUIT):  # Only handle Quit events
+                    self.quit()
+                for event in pygame.event.get():
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_p:
+                            self.game.paused = False
+                        if event.key == pygame.K_ESCAPE:
+                            self.quit()
+                            sys.exit()
+                        if event.key == pygame.K_1:
+                            self.player_1()
+                        if event.key == pygame.K_2:
+                            self.player_2()
+
+                    if event.type == pygame.JOYBUTTONDOWN:
+                        print(event)
+                mouse_pos = pygame.mouse.get_pos()
+                for button in self.buttons:
+                    if button.rect.collidepoint(mouse_pos):
+                        button.update(pygame.mouse.get_pressed()[0])
+              
+                    self.display.blit(self.background,(0,0))
+                    self.all_sprites.draw(self.display)
+                    self.display.blit(self.logo_image, (295,130))
+                    pygame.display.flip()  # Using flip() instead of update() for full display update
+        except pygame.error:
+            pass

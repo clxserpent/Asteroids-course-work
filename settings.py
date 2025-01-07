@@ -1,12 +1,18 @@
 import pygame
 import sys
+from ControlHandler import Controls_Handler
+from util import load_save
+
 class settings():
     def __init__(self):
         self.playing = False
         self.music = False
+        self.controls_bool = False
         self.display = pygame.display.set_mode((900,600))
         self.background = pygame.image.load("assets/black.png")
         self.all_sprites = pygame.sprite.Group()
+        self.save = load_save()
+        self.control_handler = Controls_Handler(self.save)
     def Button_names(self):
         from mainMenu import Button
         self.buttons = [
@@ -15,7 +21,19 @@ class settings():
             ]
         
     def controls(self):
-        pass
+    
+        self.display.fill((0,0,200))
+        self.control_handler.render(self.display)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+        mouse_pos = pygame.mouse.get_pos()
+        for self.button in self.buttons:
+            if self.button.rect.collidepoint(mouse_pos):
+                self.button.update(pygame.mouse.get_pressed()[0])
+        pygame.display.flip()
+
     
     def music_bool(self):
         self.music = not self.music
@@ -36,10 +54,9 @@ class settings():
             for self.button in self.buttons:
                 self.all_sprites.add(self.button)
             
-            self.display.blit(self.background,(0,0))
+            self.display.fill((0,0,100))
             self.all_sprites.draw(self.display)
             
-   
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -53,4 +70,3 @@ class settings():
                     self.button.update(pygame.mouse.get_pressed()[0])
             
             pygame.display.flip()
-settings_menu = settings()

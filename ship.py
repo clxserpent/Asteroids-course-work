@@ -4,8 +4,8 @@ import math
 import time
 import Meteor
 from scoreboard import *
-
-
+from util import load_save
+from powerups import powerup
 
 PLAYER_1_STARTING_X_POS = 400
 PLAYER_1_STARTING_Y_POS = 300
@@ -71,17 +71,18 @@ class Bullet(pygame.sprite.Sprite):
 class Ship(pygame.sprite.Sprite):
     def __init__(self, game, player_2):
         super().__init__()
-
         self.game = game
         self.SpawnProtection= 100
         self.ProtectionCountdown = self.SpawnProtection
-
         self.height = SHIP_HEIGHT
         self.width = SHIP_WIDTH
         self.player_2_status = player_2
         self.x_pos = 0
         self.y_pos = 0
         self.time = 0
+        self.startTime = time.monotonic()
+        self.power_up_start_time = 0
+
         if not self.player_2_status:
             self.x_pos = PLAYER_1_STARTING_X_POS
             self.y_pos = PLAYER_1_STARTING_Y_POS
@@ -93,8 +94,8 @@ class Ship(pygame.sprite.Sprite):
         self.thrust = 0  # speed to apply to our current position
         self.rotation = 0  # amount of rotation to apply to our current direction
         self.last_shot = 0
-        self.cooldown = 0.5
-        
+        self.bulletcooldown = 0.5
+      
         if not self.player_2_status:
             self.orig_image = pygame.image.load("assets/Rocket Ship.png")
         else:
@@ -104,7 +105,14 @@ class Ship(pygame.sprite.Sprite):
         self.image = self.orig_image
         self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos))
         self.all_sprites = pygame.sprite.Group()
-        
+        self.power_up_duration = 10000  # 10 seconds
+            
+        self.controls = {
+        "UP": pygame.K_w,
+        "DOWN": pygame.K_s,
+        "LEFT": pygame.K_a,
+        "RIGHT": pygame.K_d
+        }
 
     def update(self):
         if not self.player_2_status:
@@ -121,16 +129,17 @@ class Ship(pygame.sprite.Sprite):
             self.y_pos = 0 
         elif self.y_pos < 0:
             self.y_pos = self.game.get_screen_height() * 0.7
-        
+
+
     def handle_input_player_1(self):
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_w]:
+        if keys[self.controls["UP"]]:
             self.thrust += 0.12
-        if keys[pygame.K_a]:
+        if keys[self.controls["LEFT"]]:
             self.rotation += 0.2
-        if keys[pygame.K_s]:
+        if keys[self.controls["DOWN"]]:
             self.thrust -= 0.12
-        if keys[pygame.K_d]:
+        if keys[self.controls["RIGHT"]]:
             self.rotation -= 0.2
         if keys[pygame.K_SPACE]:
             self.fire_bullet()
@@ -162,9 +171,12 @@ class Ship(pygame.sprite.Sprite):
         self.image = pygame.transform.rotate(self.orig_image, self.direction - 90)
         self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos))
 
-    def fire_bullet(self):
-        if time.time() - self.last_shot > self.cooldown:
 
+
+               
+
+    def fire_bullet(self):
+        if time.time() - self.last_shot > self.bulletcooldown:
             my_bullet = Bullet(self.x_pos, self.y_pos, self.direction,self.game,self.player_2_status)
             self.game.all_sprites.add(my_bullet)
             self.last_shot = time.time()
@@ -180,11 +192,14 @@ class Ship(pygame.sprite.Sprite):
         return self.player_2_status
     
     def check_collisions(self):
-        hit_list = pygame.sprite.spritecollide(self, self.game.asteroid_sprites, False, pygame.sprite.collide_mask)
+        asteroid_hit_list = pygame.sprite.spritecollide(self, self.game.asteroid_sprites, False, pygame.sprite.collide_mask)
+        Rapidfire_hit_list = pygame.sprite.spritecollide(self,self.game.poweruplists,True,pygame.sprite.collide_mask)
+        self.time_delta = time. monotonic() - self.startTime
+
         if self.ProtectionCountdown:
             self.ProtectionCountdown -= 1
         else:
-            if hit_list:
+            if asteroid_hit_list:
                 explosion = Explosion(self.x_pos,self.y_pos)
                 self.game.all_sprites.add(explosion)
                 self.explosion_sound = pygame.mixer.Sound("assets/bangLarge.wav")
@@ -196,8 +211,27 @@ class Ship(pygame.sprite.Sprite):
                     break
                 if self.player_lives == 0:
                     self.kill()
+                 
+        if Rapidfire_hit_list:
+            self.power_up_start_time = pygame.time.get_ticks()
+            self.bulletcooldown = 0.3
+        self.elapsed_time = pygame.time.get_ticks() - self.power_up_start_time
+        if self.elapsed_time >= self.power_up_duration:
+        # Deactivate the power-up
+            self.bulletcooldown = 0.5
+
+
+
+
+
+            
                 
-               
+            
+                
+            
+
+
+                       
             
 
 
