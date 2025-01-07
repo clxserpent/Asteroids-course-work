@@ -120,6 +120,7 @@ class Mainmenu():
 
                 for event in pygame.event.get(pygame.QUIT):  # Only handle Quit events
                     self.quit()
+                    pygame.display.quit()
                 for event in pygame.event.get():
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_p:
