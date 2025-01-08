@@ -193,7 +193,8 @@ class Ship(pygame.sprite.Sprite):
     
     def check_collisions(self):
         asteroid_hit_list = pygame.sprite.spritecollide(self, self.game.asteroid_sprites, False, pygame.sprite.collide_mask)
-        Rapidfire_hit_list = pygame.sprite.spritecollide(self,self.game.poweruplists,True,pygame.sprite.collide_mask)
+        Rapidfire_hit_list = pygame.sprite.spritecollide(self,self.game.Rapidfirelists,True,pygame.sprite.collide_mask)
+        icepower_hit_list = pygame.sprite.spritecollide(self,self.game.icepowerlists,True,pygame.sprite.collide_mask)
         self.time_delta = time. monotonic() - self.startTime
 
         if self.ProtectionCountdown:
@@ -215,6 +216,12 @@ class Ship(pygame.sprite.Sprite):
         if Rapidfire_hit_list:
             self.power_up_start_time = pygame.time.get_ticks()
             self.bulletcooldown = 0.3
+        if icepower_hit_list:
+            self.power_up_start_time = pygame.time.get_ticks()
+            try:
+                self.game.asteroid_sprites.pause()
+            except AttributeError:
+                pass
         self.elapsed_time = pygame.time.get_ticks() - self.power_up_start_time
         if self.elapsed_time >= self.power_up_duration:
         # Deactivate the power-up

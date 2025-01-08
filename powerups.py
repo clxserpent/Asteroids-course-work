@@ -12,6 +12,8 @@ class powerup(pygame.sprite.Sprite):
         self.powerup = powerup
         if self.powerup == "Rapidfire":
             self.Powerupimg = pygame.image.load("assets/Rapidfire.png")
+        if self.powerup == "icepower":
+            self.Powerupimg = pygame.image.load("assets/icepower.png")
         self.powerup_x = x
         self.powerup_y = y
 

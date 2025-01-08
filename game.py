@@ -15,7 +15,8 @@ class Game:
         self.player_1 = Ship(self, False)
         self.player_2 = Ship(self,True)
         self.asteroid = Asteroid(self)
-        self.poweruplists = pygame.sprite.Group()
+        self.Rapidfirelists = pygame.sprite.Group()
+        self.icepowerlists = pygame.sprite.Group()
         self.all_sprites = pygame.sprite.Group()
         self.asteroid_sprites = pygame.sprite.Group()
         self.powerup_spawned = False
@@ -134,7 +135,7 @@ class Game:
 
             if not player2:
                 if player1_scores.player1_score >= self.P1PowerUpLastScore + 10 and player1_scores.player1_score >= 10  and player1_scores.player1_score != self.P1PowerUpLastScore:
-                    Power = powerup_manager(self,"Rapidfire")
+                    Power = powerup_manager(self,"icepower")
                     Power.spawn()
                     self.P1PowerUpLastScore = player1_scores.player1_score
             if player2:
@@ -164,12 +165,14 @@ class Game:
             self.display.blit(self.background, (0, 0))
             self.clock.tick(120)  # Cap the FPS at 60
             self.all_sprites.update()
-            self.poweruplists.update()
+            self.Rapidfirelists.update()
+            self.icepowerlists.update()
  
 
             try:
                 self.all_sprites.draw(self.display)
-                self.poweruplists.draw(self.display)
+                self.Rapidfirelists.draw(self.display)
+                self.icepowerlists.draw(self.display)
             except:
                 pass
             if not player2:

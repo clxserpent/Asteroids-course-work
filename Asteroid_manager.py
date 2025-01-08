@@ -31,8 +31,11 @@ class powerup_manager:
         self.y = 0
         self.spawned_powerup = powerup(self.powerup,self.x,self.y)
     def spawn(self):
-        self.game.poweruplists.add(self.spawned_powerup)
-
+        if self.powerup == "Rapidfire":
+            self.game.Rapidfirelists.add(self.spawned_powerup)
+        if self.powerup == "icepower":
+            self.game.icepowerlists.add(self.spawned_powerup)
+            
 
 
 
