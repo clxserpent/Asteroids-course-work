@@ -6,7 +6,6 @@
 height = 900# set the height for the 1
 width= 600  # sets the width for the display window
 from mainMenu import *
-from ship import *
 pygame.init()
 pygame_icon = pygame.image.load("AS.ico") # sets  window icon as icon picture
 pygame.display.set_icon(pygame_icon) # displays icon on window
