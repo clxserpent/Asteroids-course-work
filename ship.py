@@ -6,7 +6,7 @@ import Meteor
 from scoreboard import *
 from util import load_save
 from powerups import powerup
-
+import sys
 PLAYER_1_STARTING_X_POS = 400
 PLAYER_1_STARTING_Y_POS = 300
 
@@ -82,7 +82,7 @@ class Ship(pygame.sprite.Sprite):
         self.time = 0
         self.startTime = time.monotonic()
         self.power_up_start_time = 0
-
+        self.paused = False
         if not self.player_2_status:
             self.x_pos = PLAYER_1_STARTING_X_POS
             self.y_pos = PLAYER_1_STARTING_Y_POS
@@ -219,13 +219,16 @@ class Ship(pygame.sprite.Sprite):
         if icepower_hit_list:
             self.power_up_start_time = pygame.time.get_ticks()
             try:
-                self.game.asteroid_sprites.pause()
-            except AttributeError:
+                self.all_sprites.pause()
+            except AttributeError: # paused all movement
                 pass
+            self.game.pause_menu(self.player_2_status)
+
         self.elapsed_time = pygame.time.get_ticks() - self.power_up_start_time
         if self.elapsed_time >= self.power_up_duration:
         # Deactivate the power-up
             self.bulletcooldown = 0.5
+            self.paused = False
 
 
 
