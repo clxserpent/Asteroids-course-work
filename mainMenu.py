@@ -127,7 +127,6 @@ class Mainmenu():
                             self.game.paused = False
                         if event.key == pygame.K_ESCAPE:
                             self.quit()
-                            sys.exit()
                         if event.key == pygame.K_1:
                             self.player_1()
                         if event.key == pygame.K_2:
@@ -139,7 +138,7 @@ class Mainmenu():
                 for button in self.buttons:
                     if button.rect.collidepoint(mouse_pos):
                         button.update(pygame.mouse.get_pressed()[0])
-              
+                        
                     self.display.blit(self.background,(0,0))
                     self.all_sprites.draw(self.display)
                     self.display.blit(self.logo_image, (295,130))
