@@ -159,6 +159,7 @@ class Game:
                             self.all_sprites.pause()
                         except AttributeError: # paused all movement
                             pass
+                        self.pause_menu(player2)
                             
 
 
