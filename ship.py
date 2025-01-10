@@ -6,6 +6,7 @@ import Meteor
 from scoreboard import *
 from util import load_save
 from powerups import powerup
+import threading
 import sys
 PLAYER_1_STARTING_X_POS = 400
 PLAYER_1_STARTING_Y_POS = 300
@@ -95,7 +96,7 @@ class Ship(pygame.sprite.Sprite):
         self.rotation = 0  # amount of rotation to apply to our current direction
         self.last_shot = 0
         self.bulletcooldown = 0.5
-      
+        self.paused = False
         if not self.player_2_status:
             self.orig_image = pygame.image.load("assets/Rocket Ship.png")
         else:
@@ -113,24 +114,32 @@ class Ship(pygame.sprite.Sprite):
         "LEFT": pygame.K_a,
         "RIGHT": pygame.K_d
         }
-
+        self.update_thread = threading.Thread(target=self.update_position)
+        self.update_thread.daemon = True
+        self.update_thread.start
     def update(self):
-        if not self.player_2_status:
-            self.handle_input_player_1()
-        else:
-            self.handle_input_player_2()
-        self.rotate_and_move()
-        self.check_collisions()
-        if self.x_pos > self.game.get_screen_width() * 1.5:
-            self.x_pos = 0
-        elif self.x_pos < 0:
-            self.x_pos = self.game.get_screen_width() * 1.5
-        if self.y_pos > self.game.get_screen_height() * 0.7:
-            self.y_pos = 0 
-        elif self.y_pos < 0:
-            self.y_pos = self.game.get_screen_height() * 0.7
+        pass
+    def update_position(self):
+        while self.paused == False:
+            if not self.player_2_status:
+                self.handle_input_player_1()
+            else:
+                self.handle_input_player_2()
+            self.rotate_and_move()
+            self.check_collisions()
+            if self.x_pos > self.game.get_screen_width() * 1.5:
+                self.x_pos = 0
+            elif self.x_pos < 0:
+                self.x_pos = self.game.get_screen_width() * 1.5
+            if self.y_pos > self.game.get_screen_height() * 0.7:
+                self.y_pos = 0 
+            elif self.y_pos < 0:
+                self.y_pos = self.game.get_screen_height() * 0.7
 
-
+    def pause(self):
+        self.paused = True
+    def unpaused(self):
+        self.paused = True
     def handle_input_player_1(self):
         keys = pygame.key.get_pressed()
         if keys[self.controls["UP"]]:
