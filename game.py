@@ -162,7 +162,6 @@ class Game:
                         self.pause_menu(player2)
                             
 
-
             self.display.blit(self.background, (0, 0))
             self.clock.tick(120)  # Cap the FPS at 60
             self.all_sprites.update()
