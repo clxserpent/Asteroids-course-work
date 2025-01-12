@@ -134,9 +134,10 @@ class Game():
                 pygame.display.update()
 
             if not player2:
-                    Power = powerup_manager(self,"Rapidfire")
-                    Power.spawn()
-                    self.P1PowerUpLastScore = player1_scores.player1_score
+                    if player1_scores.player1_score >= self.P1PowerUpLastScore + 10 and player1_scores.player1_score >= 10  and player1_scores.player1_score != self.P1PowerUpLastScore:
+                        Power = powerup_manager(self,"Rapidfire")
+                        Power.spawn()
+                        self.P1PowerUpLastScore = player1_scores.player1_score
             if player2:
                 if player1_scores.player1_score >= self.P1PowerUpLastScore + 10 and player1_scores.player1_score >= 10  and player1_scores.player1_score != self.P1PowerUpLastScore:
                     Power = powerup_manager(self,"Rapidfire")
