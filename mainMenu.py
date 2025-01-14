@@ -34,7 +34,7 @@ class Button(pygame.sprite.Sprite):
 class Mainmenu():
     def __init__(self, display, height, width):
         self.display = display
-        self.background = pygame.image.load("assets/black.png").convert()  # Preload and convert for optimization
+        self.background = pygame.image.load("assets/background.jpg").convert()  # Preload and convert for optimization
         self.background = pygame.transform.scale(self.background, (height, width))
         self.all_sprites = pygame.sprite.Group()  # this groups together all the sprites created making it easier to
         self.playing = False

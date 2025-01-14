@@ -5,7 +5,7 @@ from ship import Ship
 from scoreboard import *
 from Asteroid_manager import *
 from settings import *
-class Game:
+class Game():
     def __init__(self, display, height, width, player2):
         self.paused = None
         self.display = display
@@ -134,10 +134,10 @@ class Game:
                 pygame.display.update()
 
             if not player2:
-                if player1_scores.player1_score >= self.P1PowerUpLastScore + 2 and player1_scores.player1_score >= 2  and player1_scores.player1_score != self.P1PowerUpLastScore:
-                    Power = powerup_manager(self,"icepower")
-                    Power.spawn()
-                    self.P1PowerUpLastScore = player1_scores.player1_score
+                    if player1_scores.player1_score >= self.P1PowerUpLastScore + 10 and player1_scores.player1_score >= 10  and player1_scores.player1_score != self.P1PowerUpLastScore:
+                        Power = powerup_manager(self,"Rapidfire")
+                        Power.spawn()
+                        self.P1PowerUpLastScore = player1_scores.player1_score
             if player2:
                 if player1_scores.player1_score >= self.P1PowerUpLastScore + 10 and player1_scores.player1_score >= 10  and player1_scores.player1_score != self.P1PowerUpLastScore:
                     Power = powerup_manager(self,"Rapidfire")
@@ -147,7 +147,7 @@ class Game:
                     Power = powerup_manager(self,"Rapidfire")
                     Power.spawn()
                     self.P2PowerUpLastScore = player2_scores.player2_score
-            for event in pygame.event.get():  # Only handle Quit events
+            for event in pygame.event.get():  # Only handle Quit events:
                 if event.type == pygame.QUIT:
                     self.playing = False
                     pygame.quit()

@@ -1,6 +1,6 @@
 from Meteor import *
 
-class scoreboard():
+class scoreboard:
     def __init__(self,player2):
         self.player2 = player2
         self.player1_score = 0 

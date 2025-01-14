@@ -16,8 +16,6 @@ class Asteroid_Manager:
     def spawn(self):
         self.game.all_sprites.add(self.spawned_asteroid)
         self.game.asteroid_sprites.add(self.spawned_asteroid)
-
-
     def get_screen_height(self):
         return self.game.height
 
