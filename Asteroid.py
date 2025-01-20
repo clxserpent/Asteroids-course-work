@@ -7,11 +7,10 @@ height = 900# set the height for the 1
 width= 600  # sets the width for the display window
 from mainMenu import *
 pygame.init()
-from pygame._sdl2 import Window
 pygame_icon = pygame.image.load("AS.ico") # sets  window icon as icon picture
 pygame.display.set_icon(pygame_icon) # displays icon on window
 display = pygame.display.set_mode((height,width),pygame.RESIZABLE)  # takes the height and weight and uses pygames axis to make a displayd
-Window.from_display_module().maximize()
+
 
 pygame.display.set_caption("Asteroids")  # labels the window asteroids
 ast = Mainmenu(display, height, width)   
