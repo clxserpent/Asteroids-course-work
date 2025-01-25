@@ -1,4 +1,4 @@
-import pygame
+from pygame import *
 import sys
 from Meteor import Asteroid
 from ship import Ship
@@ -8,6 +8,7 @@ from settings import *
 class Game():
     def __init__(self, display, height, width, player2):
         self.paused = None
+        self.asteroid_limit = 1
         self.display = display
         self.keys = pygame.key.get_pressed()
         self.white = (255, 255, 255)
@@ -128,9 +129,12 @@ class Game():
             if self.asteroid_block:
                 self.asteroid_block -= 1 
             else:
-                Aster = Asteroid_Manager(self,self.asteroid)
-                Aster.spawn()
-                self.asteroid_block = self.asteroid_reload
+                if self.asteroid_limit > 4:
+                    Aster = Asteroid_Manager(self,self.asteroid)
+                    Aster.spawn()
+                    self.asteroid_limit += 1
+                    self.asteroid_block = self.asteroid_reload
+                    
                 pygame.display.update()
 
             if not player2:
