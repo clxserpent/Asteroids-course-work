@@ -31,7 +31,6 @@ class Game():
         self.asteroid_sprites.add(self.asteroid)
         self.background = pygame.image.load("assets/space.png")
         self.background = pygame.transform.scale(self.background, (height, width))
-
         self.clock = pygame.time.Clock()
         self.playing = True
         self.height = height

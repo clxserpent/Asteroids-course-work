@@ -10,7 +10,6 @@ pygame.init()
 pygame_icon = pygame.image.load("AS.ico") # sets  window icon as icon picture
 pygame.display.set_icon(pygame_icon) # displays icon on window
 display = pygame.display.set_mode((height,width),pygame.RESIZABLE)  # takes the height and weight and uses pygames axis to make a displayd
-
 pygame.display.set_caption("Asteroids")  # labels the window asteroids
 ast = Mainmenu(display, height, width)   
 ast.run()
