@@ -166,7 +166,7 @@ class Game():
                             
 
             self.display.blit(self.background, (0, 0))
-            self.clock.tick(120)  # Cap the FPS at 60
+            self.clock.tick(60)  # Cap the FPS at 60
             self.all_sprites.update()
             self.Rapidfirelists.update()
             self.icepowerlists.update()
